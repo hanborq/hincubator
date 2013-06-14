@@ -1,0 +1,17 @@
+default ks
+prompt 1
+timeout 60
+display boot.msg
+F1 boot.msg
+F2 boot.msg
+F3 boot.msg
+F4 boot.msg
+F5 boot.msg
+label ks
+  kernel vmlinuz
+  append ks=nfs:@INSTALL_SERVER@:@INSTALL_ROOT@/ks/ks-@IPADDR@.cfg initrd=/initrd.img devfs=nomount ramdisk_size=16384 nofb ip=dhcp ksdevice=eth0 nicdelay=50 linksleep=50 eth0_ethtool="autoneg off speed 1000 duplex full"
+label local
+  localboot 1
+label memtest86
+  kernel memtest
+  append -

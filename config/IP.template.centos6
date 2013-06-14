@@ -1,0 +1,133 @@
+#platform=x86, AMD64, or Intel EM64T
+# System bootloader configuration
+bootloader --location=mbr
+# Clear the Master Boot Record
+zerombr
+# Partition clearing information
+clearpart --all --initlabel 
+# Use text mode install
+text
+# Firewall configuration
+firewall --disabled
+# Run the Setup Agent on first boot
+firstboot --disable
+# System keyboard
+keyboard us
+# System language
+lang en_US
+# Installation logging level
+logging --level=info
+# Use NFS installation media
+nfs --server=@INSTALL_SERVER@ --dir=@INSTALL_ROOT@
+# Network information
+network --bootproto=static --device=eth0 --ip=@IPADDR@ --gateway=192.168.1.1 --netmask=255.255.255.0 --onboot=on --hostname=@HOST@
+# Reboot after installation
+reboot
+#Root password
+#authconfig --enableshadow --enablemd5
+#rootpw --iscrypted $1$BEM9agTe$lQ4mFaKDO4mEForZAoKEn/
+rootpw 123456
+
+# SELinux configuration
+selinux --disabled
+# Do not configure the X Window System
+skipx
+# System timezone
+timezone  Asia/Shanghai
+# Install OS instead of upgrade
+install
+# Disk partitioning information
+#part /boot/efi --ondisk=sda --size=1024 --asprimary --fstype="vfat"
+part /boot        --ondisk=sda --size=1024 --asprimary --fstype="ext4"
+part swap         --ondisk=sda --size=32768 --fstype="swap"
+part /            --ondisk=sda --size=1 --fstype="ext4" --grow
+
+
+# @ means group id, other means package id
+%packages
+#@Everything
+#-@Conflicts
+@base
+@additional-devel
+@compat-libraries
+@console-internet
+@core
+@debugging
+@directory-client
+@hardware-monitoring
+@java-platform
+@large-systems
+@network-file-system-client
+@network-tools
+@performance
+@perl-runtime
+@server-platform
+@server-platform-devel
+@server-policy
+@development
+@additional-devel
+@java-platform
+@debugging
+@hardware-monitoring
+@system-management
+@system-management-snmp
+OpenIPMI
+ipmitool
+telnet
+ftp
+tftp-server
+dhcp
+net-snmp-perl
+net-snmp-python
+libuuid-devel
+krb5-server
+krb5-server-ldap
+openldap-servers
+
+@basic-desktop
+@desktop-debugging
+@desktop-platform
+@desktop-platform-devel
+@fonts
+@general-desktop
+@kde-desktop
+@legacy-x
+@x11
+
+pax
+python-dmidecode
+oddjob
+sgpio
+certmonger
+pam_krb5
+krb5-workstation
+nscd
+pam_ldap
+nss-pam-ldapd
+perl-DBD-SQLite
+%end
+
+
+
+####################################################################################
+##################################### PRE ##########################################
+####################################################################################
+#%pre
+# >2.0TB hard disk need to try to use gpt instead of mbr.
+#=ADD_PARTED_RM=
+#parted -s /dev/sda mklabel gpt
+#%end
+
+
+
+####################################################################################
+##################################### POST #########################################
+####################################################################################
+
+%post
+
+# Uncomment the next section if you uncommented the
+# chvt 3 line near the top of this file
+sleep 10s
+#chvt 7
+%end

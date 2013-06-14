@@ -1,0 +1,71 @@
+#platform=x86, AMD64, or Intel EM64T
+# System bootloader configuration
+bootloader --location=mbr
+# Clear the Master Boot Record
+zerombr
+# Partition clearing information
+clearpart --all --initlabel 
+# Use text mode install
+text
+# Firewall configuration
+firewall --disabled
+# Run the Setup Agent on first boot
+firstboot --disable
+# System keyboard
+keyboard us
+# System language
+lang en_US
+# Installation logging level
+logging --level=info
+# Use NFS installation media
+##CAUTION rhel5 requires ISO to be mounted & exported to @INSTALL_ROOT@/iso
+nfs --server=@INSTALL_SERVER@ --dir=@INSTALL_ROOT@/iso
+# Network information
+network --bootproto=static --device=eth0 --ip=@IPADDR@ --gateway=172.16.16.1 --netmask=255.255.255.0 --onboot=on --hostname=@HOST@
+# Reboot after installation
+reboot
+#Root password
+#authconfig --enableshadow --enablemd5
+#rootpw --iscrypted $1$BEM9agTe$lQ4mFaKDO4mEForZAoKEn/
+rootpw 123456
+
+key --skip
+
+# SELinux configuration
+selinux --disabled
+# Do not configure the X Window System
+skipx
+# System timezone
+timezone  Asia/Shanghai
+# Install OS instead of upgrade
+install
+# Disk partitioning information
+part /boot        --ondisk=sda --size=1024 --asprimary --fstype="ext3"
+part swap         --ondisk=sda --size=32768 --fstype="swap"
+part /            --ondisk=sda --size=1 --fstype="ext3" --grow
+
+
+# @ means group id, other means package id
+%packages
+@base
+@development-libs
+@development-tools
+@editors
+@admin-tools
+@system-tools
+@web-server
+@x-software-development
+
+
+
+
+####################################################################################
+##################################### POST #########################################
+####################################################################################
+
+%post
+# Uncomment the next section if you uncommented the
+# chvt 3 line near the top of this file
+sleep 10s
+#chvt 7
+%end
